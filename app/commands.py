@@ -77,18 +77,19 @@ def create_admin(auto=False):
         return
 
     # 创建新管理员
+    my_email = '2729538060@qq.com'
     if auto:
         # 使用默认值自动创建
         username = 'admin'
         password = '123456'
-        email = '1043744584@qq.com'
+        email = my_email
     else:
         # 交互式创建
-        use_default = input("是否使用默认管理员账户? (admin/123456/1043744584@qq.com) [Y/n]: ")
+        use_default = input("是否使用默认管理员账户? (admin/123456/2729538060@qq.com) [Y/n]: ")
         if use_default.lower() != 'n':
             username = 'admin'
             password = '123456'
-            email = '1043744584@qq.com'
+            email = my_email
         else:
             username = input("请输入管理员用户名: ")
             password = input("请输入管理员密码: ")
@@ -116,11 +117,11 @@ def init_data_command():
     """生成测试数据"""
     try:
         # 获取或创建管理员用户
-        admin = User.query.filter_by(email='1043744584@qq.com').first()
+        admin = User.query.filter_by(email=my_email).first()
         if not admin:
             admin = User(
                 username='admin',
-                email='1043744584@qq.com',
+                email=my_email,
                 is_admin=True
             )
             admin.set_password('123456')

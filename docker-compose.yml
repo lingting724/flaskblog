@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   web:
     image: lingting724/myblog:latest
@@ -16,7 +14,7 @@ services:
       - MAIL_SERVER=smtp.qq.com
       - MAIL_PORT=587
       - MAIL_USE_TLS=true
-      - MAIL_USERNAME=2729538090@qq.com
+      - MAIL_USERNAME=2729538060@qq.com
       - MAIL_PASSWORD=mijnhtzqmnjgdgha
     restart: always
 

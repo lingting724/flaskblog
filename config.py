@@ -24,5 +24,5 @@ class Config:
     
     # 管理员配置
     ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
-    ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', '1043744584@qq.com')
+    ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', '2729538060@qq.com')
     ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', '123456')
