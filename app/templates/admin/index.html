@@ -1,0 +1,108 @@
+{% extends "admin/base.html" %} {% block title %}仪表盘{% endblock %} {% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="mb-4">仪表盘</h2>
+  </div>
+</div>
+
+<!-- 统计卡片 -->
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card text-white bg-primary">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="card-title mb-0">文章数</h6>
+            <h2 class="card-text mb-0">{{ post_count }}</h2>
+          </div>
+          <i class="fas fa-file-alt fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-success">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="card-title mb-0">用户数</h6>
+            <h2 class="card-text mb-0">{{ user_count }}</h2>
+          </div>
+          <i class="fas fa-users fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-info">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="card-title mb-0">评论数</h6>
+            <h2 class="card-text mb-0">{{ comment_count }}</h2>
+          </div>
+          <i class="fas fa-comments fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-warning">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="card-title mb-0">分类数</h6>
+            <h2 class="card-text mb-0">{{ category_count }}</h2>
+          </div>
+          <i class="fas fa-folder fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <!-- 最近文章 -->
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0">最近发布的文章</h5>
+      </div>
+      <div class="list-group list-group-flush">
+        {% for post in recent_posts %}
+        <a href="{{ url_for('blog.post_detail', slug=post.slug) }}" class="list-group-item list-group-item-action">
+          {{ post.title }}
+          <small class="text-muted d-block"> {{ moment(post.created_at).fromNow() }} </small>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- 最近用户 -->
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0">最近注册的用户</h5>
+      </div>
+      <div class="card-body">
+        <div class="list-group">
+          {% for user in recent_users %}
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="mb-1">{{ user.username }}</h6>
+                <small class="text-muted"> 注册于 {{ moment(user.created_at).format('YYYY-MM-DD HH:mm') }} </small>
+              </div>
+              <span class="badge bg-primary rounded-pill">{{ user.posts.count() }} 篇文章</span>
+            </div>
+          </div>
+          {% else %}
+          <div class="text-center text-muted">暂无用户注册</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

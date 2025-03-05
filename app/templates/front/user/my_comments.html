@@ -1,0 +1,52 @@
+{% extends "front/user/base.html" %} {% block title %}我的评论{% endblock %} {% block user_content %}
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title mb-0">我的评论</h5>
+  </div>
+  <div class="card-body">
+    <div class="list-group">
+      {% for comment in comments %}
+      <div class="list-group-item">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <a href="{{ url_for('blog.post_detail', slug=comment.post.slug) }}#comment-{{ comment.id }}" class="h6 mb-0">
+            {{ comment.post.title }}
+          </a>
+          <small class="text-muted">{{ moment(comment.created_at).fromNow() }}</small>
+        </div>
+        <p class="mb-0">{{ comment.content }}</p>
+        <div class="mt-2">
+          <small class="text-muted">
+            {% if comment.is_approved %}
+            <span class="text-success"><i class="fas fa-check-circle"></i> 已审核</span>
+            {% else %}
+            <span class="text-warning"><i class="fas fa-clock"></i> 待审核</span>
+            {% endif %}
+          </small>
+          <form action="{{ url_for('user.delete_comment', id=comment.id) }}" method="post" class="d-inline float-end">
+            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('确定要删除这条评论吗？')">
+              <i class="fas fa-trash"></i> 删除
+            </button>
+          </form>
+        </div>
+      </div>
+      {% else %}
+      <div class="text-center py-4">暂无评论</div>
+      {% endfor %}
+    </div>
+
+    {% if pagination.pages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+      <ul class="pagination justify-content-center">
+        {% for page in pagination.iter_pages() %} {% if page %}
+        <li class="page-item {{ 'active' if page == pagination.page else '' }}">
+          <a class="page-link" href="{{ url_for('user.my_comments', page=page) }}">{{ page }}</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">...</span></li>
+        {% endif %} {% endfor %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

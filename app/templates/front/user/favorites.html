@@ -1,0 +1,32 @@
+{% extends "front/user/base.html" %} {% block title %}我的收藏{% endblock %} {% from "macros.html" import
+render_pagination %} {% block user_content %}
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title mb-0">我的收藏</h5>
+  </div>
+  <div class="card-body">
+    {% if current_user.favorite_posts.count() > 0 %}
+    <div class="list-group">
+      {% for post in pagination.items %}
+      <div class="list-group-item">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">
+            <a href="{{ url_for('blog.post_detail', slug=post.slug) }}" class="text-decoration-none">
+              {{ post.title }}
+            </a>
+          </h5>
+          <small class="text-muted">{{ moment(post.created_at).format('LL') }}</small>
+        </div>
+        <p class="mb-1">{{ post.summary or '暂无摘要' }}</p>
+        <small class="text-muted">
+          <i class="fas fa-user"></i> {{ post.author.username }} <i class="fas fa-eye ml-2"></i> {{ post.view_count }}
+        </small>
+      </div>
+      {% endfor %}
+    </div>
+    {{ render_pagination(pagination, 'user.favorites') }} {% else %}
+    <div class="alert alert-info">还没有收藏任何文章</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

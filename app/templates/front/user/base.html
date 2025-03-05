@@ -1,0 +1,72 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  <div class="row">
+    <!-- 侧边栏 -->
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <img
+            src="{{ url_for('static', filename=current_user.avatar_path) if current_user.avatar_path else 'https://www.gravatar.com/avatar/' + current_user.gravatar_hash + '?d=identicon' }}"
+            class="rounded-circle mb-3"
+            width="100"
+            height="100"
+            alt="{{ current_user.username }}" />
+          <h5 class="card-title">{{ current_user.username }}</h5>
+          <p class="text-muted small">{{ current_user.bio or '这个人很懒，什么都没写~' }}</p>
+        </div>
+        <div class="list-group list-group-flush">
+          <a
+            href="{{ url_for('user.dashboard') }}"
+            class="list-group-item list-group-item-action {% if request.endpoint == 'user.dashboard' %}active{% endif %}">
+            <i class="fas fa-tachometer-alt me-2"></i>仪表盘
+          </a>
+          <a
+            href="{{ url_for('user.create_post') }}"
+            class="list-group-item list-group-item-action {% if request.endpoint == 'user.create_post' %}active{% endif %}">
+            <i class="fas fa-edit me-2"></i>写文章
+          </a>
+          <a
+            href="{{ url_for('user.my_posts') }}"
+            class="list-group-item list-group-item-action {% if request.endpoint == 'user.my_posts' %}active{% endif %}">
+            <i class="fas fa-file-alt me-2"></i>我的文章
+          </a>
+          <a
+            href="{{ url_for('user.my_comments') }}"
+            class="list-group-item list-group-item-action {% if request.endpoint == 'user.my_comments' %}active{% endif %}">
+            <i class="fas fa-comments me-2"></i>我的评论
+          </a>
+          <a
+            href="{{ url_for('user.favorites') }}"
+            class="list-group-item list-group-item-action {% if request.endpoint == 'user.favorites' %}active{% endif %}">
+            <i class="fas fa-star me-2"></i>我的收藏
+          </a>
+          <a
+            href="{{ url_for('user.profile') }}"
+            class="list-group-item list-group-item-action {% if request.endpoint == 'user.profile' %}active{% endif %}">
+            <i class="fas fa-user-cog me-2"></i>个人资料
+          </a>
+          <a
+            href="{{ url_for('user.following') }}"
+            class="list-group-item list-group-item-action {% if request.endpoint == 'user.following' %}active{% endif %}">
+            <i class="fas fa-user-friends me-2"></i>我的关注
+          </a>
+          <a
+            href="{{ url_for('user.followers') }}"
+            class="list-group-item list-group-item-action {% if request.endpoint == 'user.followers' %}active{% endif %}">
+            <i class="fas fa-users me-2"></i>我的粉丝
+          </a>
+          <a class="list-group-item list-group-item-action" href="{{ url_for('user.my_categories') }}">
+            <i class="fas fa-folder me-2"></i> 分类管理
+          </a>
+          <a class="list-group-item list-group-item-action" href="{{ url_for('user.my_tags') }}">
+            <i class="fas fa-tags me-2"></i> 标签管理
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主要内容区 -->
+    <div class="col-md-9">{% block user_content %}{% endblock %}</div>
+  </div>
+</div>
+{% endblock %}

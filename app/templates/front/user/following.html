@@ -1,0 +1,57 @@
+{% extends "front/user/base.html" %} {% block title %}我的关注{% endblock %} {% block user_content %}
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title mb-0">我的关注</h5>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      {% for user in users.items %}
+      <div class="col-md-6 mb-4">
+        <div class="d-flex align-items-center">
+          <img
+            src="{{ url_for('static', filename=user.avatar_path) if user.avatar_path else 'https://www.gravatar.com/avatar/' + user.gravatar_hash + '?d=identicon' }}"
+            class="rounded-circle me-3"
+            style="width: 64px; height: 64px"
+            alt="{{ user.username }}" />
+          <div>
+            <h6 class="mb-1">
+              <a href="{{ url_for('blog.user_posts', username=user.username) }}" class="text-decoration-none"
+                >{{ user.username }}</a
+              >
+            </h6>
+            <p class="text-muted small mb-2">{{ user.bio or '这个人很懒，什么都没写~' }}</p>
+            <form action="{{ url_for('user.follow', user_id=user.id) }}" method="post" class="d-inline">
+              <button type="submit" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-user-minus"></i> 取消关注
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-12">
+        <div class="text-center py-5">
+          <i class="fas fa-user-friends fa-3x text-muted mb-3"></i>
+          <p class="text-muted">还没有关注任何人</p>
+          <a href="{{ url_for('blog.index') }}" class="btn btn-primary">去看看</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if users.pages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+      <ul class="pagination justify-content-center">
+        {% for page in users.iter_pages() %} {% if page %}
+        <li class="page-item {{ 'active' if page == users.page else '' }}">
+          <a class="page-link" href="{{ url_for('user.following', page=page) }}">{{ page }}</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">...</span></li>
+        {% endif %} {% endfor %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

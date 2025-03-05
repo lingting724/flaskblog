@@ -1,0 +1,84 @@
+{% extends "front/user/base.html" %} {% block title %}个人资料{% endblock %} {% block user_content %}
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title mb-0">个人资料</h4>
+  </div>
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+      <div class="row mb-3">
+        <div class="col-md-3 text-center">
+          <img
+            src="{{ url_for('static', filename=current_user.avatar_path) if current_user.avatar_path else 'https://www.gravatar.com/avatar/' + current_user.gravatar_hash + '?d=identicon' }}"
+            class="rounded-circle mb-3"
+            width="150"
+            height="150"
+            alt="头像" />
+          <div class="mb-3">
+            {{ form.avatar.label(class="form-label") }} {{ form.avatar(class="form-control" + (" is-invalid" if
+            form.avatar.errors else ""), autocomplete="off") }} {% for error in form.avatar.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="mb-3">
+            {{ form.username.label(class="form-label") }} {{ form.username(class="form-control" + (" is-invalid" if
+            form.username.errors else ""), autocomplete="username") }} {% for error in form.username.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="mb-3">
+            {{ form.email.label(class="form-label") }} {{ form.email(class="form-control" + (" is-invalid" if
+            form.email.errors else ""), autocomplete="email") }} {% for error in form.email.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="mb-3">
+            {{ form.bio.label(class="form-label") }} {{ form.bio(class="form-control" + (" is-invalid" if
+            form.bio.errors else ""), rows="3") }} {% for error in form.bio.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="d-grid gap-2">{{ form.submit(class="btn btn-primary") }}</div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 修改密码卡片 -->
+<div class="card mt-4">
+  <div class="card-header">
+    <h4 class="card-title mb-0">修改密码</h4>
+  </div>
+  <div class="card-body">
+    <form method="post" action="{{ url_for('user.change_password') }}">
+      {{ password_form.hidden_tag() }}
+      <input type="hidden" name="username" value="{{ current_user.username }}" autocomplete="username" />
+      <div class="mb-3">
+        {{ password_form.old_password.label(class="form-label") }} {{ password_form.old_password(class="form-control" +
+        (" is-invalid" if password_form.old_password.errors else ""), autocomplete="current-password") }} {% for error
+        in password_form.old_password.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ password_form.new_password.label(class="form-label") }} {{ password_form.new_password(class="form-control" +
+        (" is-invalid" if password_form.new_password.errors else ""), autocomplete="new-password") }} {% for error in
+        password_form.new_password.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ password_form.new_password2.label(class="form-label") }} {{ password_form.new_password2(class="form-control"
+        + (" is-invalid" if password_form.new_password2.errors else ""), autocomplete="new-password") }} {% for error in
+        password_form.new_password2.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="d-grid gap-2">{{ password_form.submit(class="btn btn-primary", id="password_submit") }}</div>
+    </form>
+  </div>
+</div>
+{% endblock %}

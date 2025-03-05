@@ -1,0 +1,115 @@
+{% extends "base.html" %} {% block title %}{{ user.username }} 的文章{% endblock %} {% block content %}
+<div class="container">
+  <div class="row">
+    <!-- 用户信息卡片 -->
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <img
+            src="{{ url_for('static', filename=user.avatar_path) if user.avatar_path else 'https://www.gravatar.com/avatar/' + user.gravatar_hash + '?d=identicon' }}"
+            class="rounded-circle mb-3"
+            style="width: 128px; height: 128px"
+            alt="{{ user.username }}" />
+          <h5 class="card-title">{{ user.username }}</h5>
+          <p class="text-muted small">{{ user.bio or '这个人很懒，什么都没写~' }}</p>
+
+          <!-- 统计信息 -->
+          <div class="row text-center mb-3">
+            <div class="col">
+              <h6 class="mb-0">{{ user.posts.count() }}</h6>
+              <small class="text-muted">文章</small>
+            </div>
+            <div class="col">
+              <h6 class="mb-0">{{ user.followers_count }}</h6>
+              <small class="text-muted">粉丝</small>
+            </div>
+            <div class="col">
+              <h6 class="mb-0">{{ user.following_count }}</h6>
+              <small class="text-muted">关注</small>
+            </div>
+          </div>
+
+          <!-- 关注按钮部分 -->
+          {% if current_user.is_authenticated %} {# 添加登录检查 #} {% if user != current_user %} {#
+          不是自己的主页才显示关注按钮 #}
+          <form action="{{ url_for('user.follow', user_id=user.id) }}" method="post">
+            {% if current_user.is_following(user) %}
+            <button type="submit" class="btn btn-outline-primary btn-sm w-100">
+              <i class="fas fa-user-minus"></i> 取消关注
+            </button>
+            {% else %}
+            <button type="submit" class="btn btn-primary btn-sm w-100"><i class="fas fa-user-plus"></i> 关注</button>
+            {% endif %}
+          </form>
+          {% endif %} {% else %}
+          <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-sm w-100">
+            <i class="fas fa-user-plus"></i> 登录后关注
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- 文章列表 -->
+    <div class="col-md-9">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">{{ user.username }}的文章</h5>
+        </div>
+        <div class="card-body">
+          {% for post in posts.items %}
+          <article class="mb-4">
+            <div class="row">
+              {% if post.cover_path %}
+              <div class="col-md-3">
+                <img
+                  src="{{ url_for('static', filename=post.cover_path) }}"
+                  class="img-fluid rounded"
+                  alt="{{ post.title }}" />
+              </div>
+              {% endif %}
+              <div class="{{ 'col-md-9' if post.cover_path else 'col-md-12' }}">
+                <h5>
+                  <a href="{{ url_for('blog.post_detail', slug=post.slug) }}" class="text-decoration-none"
+                    >{{ post.title }}</a
+                  >
+                </h5>
+                <p class="text-muted small mb-2">{{ post.summary }}</p>
+                <div class="text-muted small">
+                  <span><i class="fas fa-calendar"></i> {{ moment(post.created_at).format('LL') }}</span>
+                  <span class="mx-2">|</span>
+                  <span><i class="fas fa-folder"></i> {{ post.category.name }}</span>
+                  <span class="mx-2">|</span>
+                  <span><i class="fas fa-eye"></i> {{ post.view_count }} 次阅读</span>
+                  <span class="mx-2">|</span>
+                  <span><i class="fas fa-comments"></i> {{ post.comments.count() }} 条评论</span>
+                </div>
+              </div>
+            </div>
+          </article>
+          {% else %}
+          <div class="text-center py-5">
+            <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+            <p class="text-muted">暂无文章</p>
+          </div>
+          {% endfor %} {% if posts.pages > 1 %}
+          <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+              {% for page in posts.iter_pages() %} {% if page %}
+              <li class="page-item {{ 'active' if page == posts.page else '' }}">
+                <a class="page-link" href="{{ url_for('blog.user_posts', username=user.username, page=page) }}"
+                  >{{ page }}</a
+                >
+              </li>
+              {% else %}
+              <li class="page-item disabled"><span class="page-link">...</span></li>
+              {% endif %} {% endfor %}
+            </ul>
+          </nav>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

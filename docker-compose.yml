@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  web:
+    image: lingting724/myblog:latest
+    ports:
+      - '5000:5000'
+    volumes:
+      - myblog-data:/myblog/instance
+      - myblog-uploads:/myblog/app/static/uploads
+    environment:
+      - FLASK_APP=run.py
+      - FLASK_ENV=production
+      - FLASK_DEBUG=0
+      - SECRET_KEY=dsagdsahjxkllzdsa54ds5a144fs484z65g44a21cx
+      - MAIL_SERVER=smtp.qq.com
+      - MAIL_PORT=587
+      - MAIL_USE_TLS=true
+      - MAIL_USERNAME=2729538090@qq.com
+      - MAIL_PASSWORD=mijnhtzqmnjgdgha
+    restart: always
+
+  redis:
+    image: redis:6
+    volumes:
+      - redis-data:/data
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - '80:5000'
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - myblog-uploads:/myblog/app/static/uploads:ro
+    depends_on:
+      - web
+    restart: always
+
+volumes:
+  myblog-data:
+  myblog-uploads:
+  redis-data:

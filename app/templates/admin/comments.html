@@ -1,0 +1,104 @@
+{% extends "admin/base.html" %} {% block title %}评论管理{% endblock %} {% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>评论管理</h2>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>评论内容</th>
+            <th>作者</th>
+            <th>文章</th>
+            <th>状态</th>
+            <th>发布时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for comment in comments.items %}
+          <tr>
+            <td>{{ comment.content }}</td>
+            <td>{{ comment.author.username }}</td>
+            <td>
+              <a href="{{ url_for('blog.post_detail', slug=comment.post.slug) }}" target="_blank">
+                {{ comment.post.title }}
+              </a>
+            </td>
+            <td>
+              {% if comment.is_approved %}
+              <span class="badge bg-success">已审核</span>
+              {% else %}
+              <span class="badge bg-warning">待审核</span>
+              {% endif %}
+            </td>
+            <td>{{ moment(comment.created_at).format('L') }}</td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <form
+                  action="{{ url_for('admin_custom.toggle_comment', id=comment.id) }}"
+                  method="post"
+                  class="d-inline">
+                  <button type="submit" class="btn btn-{{ 'success' if not comment.is_approved else 'warning' }}">
+                    <i class="fas fa-{{ 'check' if not comment.is_approved else 'ban' }}"></i>
+                  </button>
+                </form>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteModal{{ comment.id }}">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+
+              <!-- 删除确认对话框 -->
+              <div class="modal fade" id="deleteModal{{ comment.id }}" tabindex="-1">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">确认删除</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>确定要删除这条评论吗？此操作不可恢复。</p>
+                      <div class="alert alert-secondary">{{ comment.content }}</div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                      <form
+                        action="{{ url_for('admin_custom.delete_comment', id=comment.id) }}"
+                        method="post"
+                        class="d-inline">
+                        <button type="submit" class="btn btn-danger">确认删除</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 分页 -->
+    {% if comments.pages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+      <ul class="pagination justify-content-center">
+        {% for page in comments.iter_pages() %} {% if page %}
+        <li class="page-item {{ 'active' if page == comments.page else '' }}">
+          <a class="page-link" href="{{ url_for('admin_custom.comments', page=page) }}">{{ page }}</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">...</span></li>
+        {% endif %} {% endfor %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

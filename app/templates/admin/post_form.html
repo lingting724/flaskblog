@@ -1,0 +1,88 @@
+{% extends "admin/base.html" %} {% block title %}{{ title }}{% endblock %} {% block styles %}
+<link href="{{ url_for('static', filename='css/summernote-bs5.min.css') }}" rel="stylesheet" />
+{% endblock %} {% block content %}
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title mb-0">{{ title }}</h4>
+  </div>
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        {{ form.title.label(class="form-label") }} {{ form.title(class="form-control" + (" is-invalid" if
+        form.title.errors else ""), autocomplete="off") }} {% for error in form.title.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ form.summary.label(class="form-label") }} {{ form.summary(class="form-control" + (" is-invalid" if
+        form.summary.errors else ""), rows="3", autocomplete="off") }} {% for error in form.summary.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <div class="mb-3">
+            {{ form.category_id.label(class="form-label") }} {{ form.category_id(class="form-select" + (" is-invalid" if
+            form.category_id.errors else "")) }} {% for error in form.category_id.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            {{ form.tags.label(class="form-label") }} {{ form.tags(class="form-select" + (" is-invalid" if
+            form.tags.errors else ""), multiple="multiple", size="5") }} {% for error in form.tags.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        {{ form.content.label(class="form-label") }} {{ form.content(class="form-control" + (" is-invalid" if
+        form.content.errors else ""), id="summernote") }} {% for error in form.content.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {% if post and post.cover_path %}
+        <img
+          src="{{ url_for('static', filename=post.cover_path) }}"
+          class="img-thumbnail mb-2"
+          style="max-height: 200px" />
+        {% endif %} {{ form.cover.label(class="form-label") }} {{ form.cover(class="form-control" + (" is-invalid" if
+        form.cover.errors else "")) }} {% for error in form.cover.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3 form-check">
+        {{ form.is_published(class="form-check-input") }} {{ form.is_published.label(class="form-check-label") }}
+      </div>
+      <div class="d-flex justify-content-between">
+        <a href="{{ url_for('admin_custom.posts') }}" class="btn btn-secondary">返回</a>
+        {{ form.submit(class="btn btn-primary") }}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script src="{{ url_for('static', filename='js/summernote-bs5.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/summernote-zh-CN.min.js') }}"></script>
+<script>
+  $(document).ready(function () {
+    $('#summernote').summernote({
+      height: 300,
+      lang: 'zh-CN',
+      toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'underline', 'clear']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['table', ['table']],
+        ['insert', ['link', 'picture']],
+        ['view', ['fullscreen', 'codeview', 'help']],
+      ],
+    })
+  })
+</script>
+{% endblock %}

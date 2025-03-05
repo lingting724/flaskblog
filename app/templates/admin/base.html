@@ -1,0 +1,159 @@
+{% set endpoint = request.endpoint.split('.')[0] == 'admin_custom' %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock %} - 管理后台</title>
+    <!-- Bootstrap CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
+    <link rel="icon" href="https://dormousehole.readthedocs.io/en/latest/_static/shortcut-icon.png" />
+    <style>
+      .sidebar {
+        min-height: calc(100vh - 56px);
+        background-color: #f8f9fa;
+      }
+      .nav-link {
+        color: #333;
+      }
+      .nav-link:hover {
+        background-color: #e9ecef;
+      }
+      .nav-link.active {
+        color: #fff;
+        background-color: #0d6efd;
+      }
+      ::-webkit-scrollbar {
+        width: 5px;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #293341;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-track {
+        background-color: #f8f9fa;
+        border-radius: 3px;
+      }
+    </style>
+    {% block styles %}{% endblock %} {{ moment.include_moment() }} {{ moment.locale('zh-cn') }}
+  </head>
+  <body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('admin_custom.index') }}">博客管理系统</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link text-secondary" href="{{ url_for('blog.index') }}" target="_blank">
+                <i class="fas fa-home"></i> 网站首页
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle text-secondary"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown">
+                <i class="fas fa-user"></i> {{ current_user.username }}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('user.profile') }}"><i class="fas fa-user"></i>个人资料</a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('user.settings') }}">
+                    <i class="fas fa-cog"></i> 系统设置
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('auth.logout') }}"
+                    ><i class="fas fa-sign-out-alt"></i>退出</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 侧边栏 -->
+        <nav class="col-md-2 sidebar py-3">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a
+                class="nav-link {{ 'active' if request.endpoint == 'admin_custom.index' }}"
+                href="{{ url_for('admin_custom.index') }}">
+                <i class="fas fa-tachometer-alt"></i> 仪表盘
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {{ 'active' if request.endpoint == 'admin_custom.posts' }}"
+                href="{{ url_for('admin_custom.posts') }}">
+                <i class="fas fa-file-alt"></i> 文章管理
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {{ 'active' if request.endpoint == 'admin_custom.categories' }}"
+                href="{{ url_for('admin_custom.categories') }}">
+                <i class="fas fa-folder"></i> 分类管理
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {{ 'active' if request.endpoint == 'admin_custom.tags' }}"
+                href="{{ url_for('admin_custom.tags') }}">
+                <i class="fas fa-tags"></i> 标签管理
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {{ 'active' if request.endpoint == 'admin_custom.comments' }}"
+                href="{{ url_for('admin_custom.comments') }}">
+                <i class="fas fa-comments"></i> 评论管理
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {{ 'active' if request.endpoint == 'admin_custom.users' }}"
+                href="{{ url_for('admin_custom.users') }}">
+                <i class="fas fa-users"></i> 用户管理
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- 主要内容 -->
+        <main class="col-md-10 ms-sm-auto px-4 py-3">
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in
+          messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
+        </main>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

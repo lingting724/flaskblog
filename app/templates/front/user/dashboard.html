@@ -1,0 +1,89 @@
+{% extends "front/user/base.html" %} {% block title %} 仪表盘 {% endblock %} {% block user_content %}
+<div class="row">
+  <!-- 统计卡片 -->
+  <div class="col-md-4">
+    <div class="card bg-primary text-white mb-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h3 class="mb-0">{{ post_count }}</h3>
+            <div class="small">文章数</div>
+          </div>
+          <i class="fas fa-file-alt fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card bg-success text-white mb-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h3 class="mb-0">{{ comment_count }}</h3>
+            <div class="small">评论数</div>
+          </div>
+          <i class="fas fa-comments fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card bg-info text-white mb-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h3 class="mb-0">{{ view_count }}</h3>
+            <div class="small">总浏览量</div>
+          </div>
+          <i class="fas fa-eye fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 最近文章 -->
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="card-title mb-0">最近发布的文章</h5>
+      </div>
+      <div class="list-group list-group-flush">
+        {% for post in recent_posts %}
+        <a href="{{ url_for('blog.post_detail', slug=post.slug) }}" class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>{{ post.title }}</div>
+            <small class="text-muted">{{ moment(post.created_at).fromNow() }}</small>
+          </div>
+        </a>
+        {% else %}
+        <div class="list-group-item">暂无文章</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- 最近评论 -->
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="card-title mb-0">最近的评论</h5>
+      </div>
+      <div class="list-group list-group-flush">
+        {% for comment in recent_comments %}
+        <a
+          href="{{ url_for('blog.post_detail', slug=comment.post.slug) }}#comment-{{ comment.id }}"
+          class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="text-truncate">{{ comment.content }}</div>
+            <small class="text-muted">{{ moment(comment.created_at).fromNow() }}</small>
+          </div>
+          <small class="text-muted">评论文章：{{ comment.post.title }}</small>
+        </a>
+        {% else %}
+        <div class="list-group-item">暂无评论</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

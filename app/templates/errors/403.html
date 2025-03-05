@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block title %}403 禁止访问{% endblock %} {% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <div class="error-page mt-5">
+        <h1 class="display-1 text-danger">403</h1>
+        <h2 class="mb-4">禁止访问</h2>
+        <p class="lead text-muted mb-4">抱歉，您没有权限访问此页面。</p>
+        <a href="{{ url_for('blog.index') }}" class="btn btn-primary"> <i class="fas fa-home me-2"></i>返回首页 </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

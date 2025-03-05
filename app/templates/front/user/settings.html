@@ -1,0 +1,38 @@
+{% extends "front/user/base.html" %} {% block title %}系统设置{% endblock %} {% block user_content %}
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title mb-0">通知设置</h5>
+  </div>
+  <div class="card-body">
+    <form method="post">
+      {{ form.hidden_tag() }}
+
+      <h6 class="mb-3">邮件通知</h6>
+      <div class="mb-3">
+        <div class="form-check">
+          {{ form.notify_followed(class="form-check-input") }} {{ form.notify_followed.label(class="form-check-label")
+          }}
+        </div>
+        <div class="form-check">
+          {{ form.notify_comment(class="form-check-input") }} {{ form.notify_comment.label(class="form-check-label") }}
+        </div>
+        <div class="form-check">
+          {{ form.notify_reply(class="form-check-input") }} {{ form.notify_reply.label(class="form-check-label") }}
+        </div>
+      </div>
+
+      <h6 class="mb-3">隐私设置</h6>
+      <div class="mb-3">
+        <div class="form-check">
+          {{ form.show_email(class="form-check-input") }} {{ form.show_email.label(class="form-check-label") }}
+        </div>
+        <div class="form-check">
+          {{ form.show_following(class="form-check-input") }} {{ form.show_following.label(class="form-check-label") }}
+        </div>
+      </div>
+
+      <div class="d-grid gap-2">{{ form.submit(class="btn btn-primary") }}</div>
+    </form>
+  </div>
+</div>
+{% endblock %}

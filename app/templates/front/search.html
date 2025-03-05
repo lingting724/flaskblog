@@ -1,0 +1,52 @@
+{% extends "base.html" %} {% block title %}搜索结果{% endblock %} {% block content %}
+<div class="container">
+  <h3 class="mb-4">
+    搜索结果 {% if query %}
+    <small class="text-muted">关键词: {{ query }}</small>
+    {% endif %}
+  </h3>
+
+  {% if posts %} {% if posts.items %} {% for post in posts.items %}
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row">
+        {% if post.cover_path %}
+        <div class="col-md-3">
+          <img
+            src="{{ url_for('static', filename=post.cover_path) }}"
+            class="img-fluid rounded"
+            alt="{{ post.title }}" />
+        </div>
+        {% endif %}
+        <div class="{{ 'col-md-9' if post.cover_path else 'col-md-12' }}">
+          <h5 class="card-title">
+            <a href="{{ url_for('blog.post_detail', slug=post.slug) }}" class="text-decoration-none"
+              >{{ post.title }}</a
+            >
+          </h5>
+          <p class="card-text text-muted small">
+            <i class="fas fa-user"></i> {{ post.author.username }} &nbsp; <i class="fas fa-calendar"></i> {{
+            post.created_at.strftime('%Y-%m-%d') }} &nbsp; <i class="fas fa-eye"></i> {{ post.view_count }} 阅读
+          </p>
+          <p class="card-text">{{ post.summary }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %} {% if posts.pages > 1 %}
+  <nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% for page in posts.iter_pages() %} {% if page %}
+      <li class="page-item {{ 'active' if page == posts.page else '' }}">
+        <a class="page-link" href="{{ url_for('blog.search', q=query, page=page) }}">{{ page }}</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">...</span></li>
+      {% endif %} {% endfor %}
+    </ul>
+  </nav>
+  {% endif %} {% else %}
+  <div class="alert alert-info">没有找到相关文章</div>
+  {% endif %} {% endif %}
+</div>
+{% endblock %}

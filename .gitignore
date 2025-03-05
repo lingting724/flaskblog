@@ -1,0 +1,26 @@
+# 忽略上传的文件
+uploads/*
+!uploads/.gitkeep
+!uploads/avatars/.gitkeep
+!uploads/posts/.gitkeep
+
+# 忽略实例文件
+instance/*
+!instance/.gitkeep
+migrations/*
+!migrations/.gitkeep
+
+# 忽略静态文件中的上传内容
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+!app/static/uploads/avatars/.gitkeep
+!app/static/uploads/posts/.gitkeep
+
+# 添加Docker相关忽略
+instance/
+*.pyc
+__pycache__/
+.env
+.env-prod
+app/static/uploads/*
+!app/static/uploads/.gitkeep 

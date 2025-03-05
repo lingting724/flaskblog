@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block title %}500 服务器错误{% endblock %} {% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <div class="error-page mt-5">
+        <h1 class="display-1 text-danger">500</h1>
+        <h2 class="mb-4">服务器错误</h2>
+        <p class="lead text-muted mb-4">抱歉，服务器出现了一些问题。我们正在努力修复中。</p>
+        <div class="d-flex justify-content-center gap-3">
+          <a href="{{ url_for('blog.index') }}" class="btn btn-primary"> <i class="fas fa-home me-2"></i>返回首页 </a>
+          <button onclick="location.reload()" class="btn btn-outline-secondary">
+            <i class="fas fa-sync-alt me-2"></i>刷新页面
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

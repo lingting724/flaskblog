@@ -1,0 +1,56 @@
+{% extends "base.html" %} {% block title %}{{ title }}{% endblock %} {% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <h2 class="mb-4">
+        标签：{{ tag.name }}
+        <small class="text-muted">({{ pagination.total }}篇文章)</small>
+      </h2>
+
+      {% for post in posts %}
+      <article class="blog-post mb-4">
+        <h2 class="blog-post-title">
+          <a href="{{ url_for('blog.post_detail', slug=post.slug) }}" class="text-decoration-none">
+            {{ post.title }}
+          </a>
+        </h2>
+        <p class="blog-post-meta text-muted">
+          <i class="fas fa-user"></i>
+          <a href="{{ url_for('user.user_posts', username=post.author.username) }}" class="text-decoration-none">
+            {{ post.author.username }}
+          </a>
+          | <i class="fas fa-calendar"></i> {{ moment(post.created_at).format('LL') }} | <i class="fas fa-folder"></i>
+          {% if post.category %}
+          <a href="{{ url_for('blog.category_posts', slug=post.category.slug) }}" class="text-decoration-none">
+            {{ post.category.name }}
+          </a>
+          {% else %}未分类{% endif %}
+        </p>
+        <p>{{ post.summary }}</p>
+        <p>
+          <a href="{{ url_for('blog.post_detail', slug=post.slug) }}" class="btn btn-primary btn-sm">阅读更多</a>
+        </p>
+      </article>
+      {% else %}
+      <div class="alert alert-info">该标签下暂无文章</div>
+      {% endfor %} {% if pagination.pages > 1 %}
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          {% for page in pagination.iter_pages() %} {% if page %}
+          <li class="page-item {{ 'active' if page == pagination.page else '' }}">
+            <a class="page-link" href="{{ url_for('blog.tag_posts', slug=tag.slug, page=page) }}">{{ page }}</a>
+          </li>
+          {% else %}
+          <li class="page-item disabled"><span class="page-link">...</span></li>
+          {% endif %} {% endfor %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
+
+    <div class="col-md-4">
+      <!-- 可以添加侧边栏内容 -->
+    </div>
+  </div>
+</div>
+{% endblock %}
